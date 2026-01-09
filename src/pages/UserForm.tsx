@@ -9,7 +9,7 @@ export default function UserForm() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
-  const { register, control, handleSubmit, reset } = useForm<UserFormValues>({
+  const { register, control, handleSubmit, reset, formState: { errors } } = useForm<UserFormValues>({
     defaultValues: {
       firstName: '',
       lastName: '',
@@ -65,15 +65,26 @@ export default function UserForm() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label>Имя</label>
-          <input {...register('firstName')} />
+          <input {...register('firstName', { required: 'Имя обязательно' })} />
+          <span style={{ color: 'red', fontSize: '0.85rem', marginLeft: 4 }}> {errors.firstName?.message} </span>
         </div>
         <div>
           <label>Фамилия</label>
-          <input {...register('lastName')} />
+          <input {...register('lastName', { required: 'Фамилия обязательна' })} />
+          <span style={{ color: 'red', fontSize: '0.85rem', marginLeft: 4 }}> {errors.lastName?.message} </span>
         </div>
         <div>
           <label>Email</label>
-          <input {...register('email')} />
+          <input 
+            {...register('email', { 
+              required: 'Email обязателен', 
+              pattern: {
+                value: /^\S+@\S+$/i,
+                message: 'Неверный формат Email'
+              } 
+            })} 
+          />
+          <span style={{ color: 'red', fontSize: '0.85rem', marginLeft: 4 }}> {errors.email?.message} </span>
         </div>
         <div>
           <label>Навыки</label>
