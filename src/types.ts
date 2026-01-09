@@ -6,3 +6,10 @@ export interface User {
   skills: string[];
   registeredAt: string;
 }
+
+export type UserFormValues = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  skills: { value: string }[];
+};
