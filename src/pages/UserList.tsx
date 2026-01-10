@@ -27,19 +27,19 @@ export default function UserList() {
       field: 'skills',
       headerName: 'Навыки',
       width: 200,
-      valueGetter: (params: any) => {
-        const row = params.row as User | undefined;
-        return row?.skills?.join(', ') || '';
+      renderCell: (params: GridRenderCellParams<User>) => {
+        return (params.row.skills || []).join(', ');
       },
     },
     {
       field: 'registeredAt',
       headerName: 'Дата регистрации',
-      width: 150,
+      width: 170,
       sortable: true,
-      valueGetter: (params: any) => {
-        const row = params.row as User | undefined;
-        return row?.registeredAt ? new Date(row.registeredAt).toLocaleDateString() : '';
+      renderCell: (params: GridRenderCellParams<User>) => {
+        return params.row.registeredAt
+          ? new Date(params.row.registeredAt).toLocaleDateString()
+          : '';
       },
     },
     {
@@ -75,23 +75,53 @@ export default function UserList() {
   ];
 
   return (
-    <Box sx={{ width: '100%', mt: 2 }}>
-      <Box sx={{ mb: 1 }}>
-        <Button variant="contained" onClick={() => navigate('/add')} sx={{ mr: 1 }}>
-          Добавить пользователя
-        </Button>
-      </Box>
-      <DataGrid
-        columns={columns}
-        rows={users}
-        getRowId={(row: User) => row.id}
-        initialState={{
-          pagination: { paginationModel: { pageSize: 5, page: 0 } },
-        }}
-        pageSizeOptions={[5]}
-        disableRowSelectionOnClick
-        autoHeight
-      />
+ <Box
+  sx={{
+    minHeight: '100vh',
+    bgcolor: '#f0f2f5',
+    p: 2,
+    display: 'flex',
+    justifyContent: 'center',
+  }}
+>
+  <Box
+    sx={{
+      width: '100%',
+      maxWidth: 1200, 
+    }}
+  >
+    <Box sx={{ mb: 1 }}>
+      <Button variant="contained" onClick={() => navigate('/add')} sx={{ mr: 1 }}>
+        Добавить пользователя
+      </Button>
     </Box>
+    <DataGrid
+      columns={columns}
+      rows={users}
+      getRowId={(row: User) => row.id}
+      initialState={{
+        pagination: { paginationModel: { pageSize: 5, page: 0 } },
+      }}
+      pageSizeOptions={[5]}
+      disableRowSelectionOnClick
+      autoHeight
+      sx={{
+        bgcolor: '#f5f5f5',
+        '& .MuiDataGrid-row': {
+          bgcolor: '#ffffff',
+          '&:nth-of-type(odd)': {
+            bgcolor: '#f9f9f9',
+          },
+        },
+        '& .MuiDataGrid-columnHeaders': {
+          bgcolor: '#e0e0e0',
+        },
+        '& .MuiDataGrid-footerContainer': {
+          bgcolor: '#e0e0e0',
+        },
+      }}
+    />
+  </Box>
+</Box>
   );
 }
