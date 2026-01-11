@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { User, UserFormValues } from '../types';
 import { addUser, updateUser, getUsers } from '../api';
 import { useEffect, useState } from 'react';
+import { TextField, Button, Box, Stack, Typography, IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function UserForm() {
   const { id } = useParams();
@@ -57,49 +59,69 @@ export default function UserForm() {
     navigate('/');
   };
 
-  if (loading) return <div>Загрузка...</div>;
+  if (loading) return <Typography>Загрузка...</Typography>;
 
   return (
-    <div>
-      <h1>{id ? 'Редактировать' : 'Добавить'} пользователя</h1>
+    <Box sx={{ maxWidth: 600, mx: 'auto', mt: 4, p: 2, bgcolor: '#f5f5f5', borderRadius: 2 }}>
+      <Typography variant="h5" mb={2}>
+        {id ? 'Редактировать' : 'Добавить'} пользователя
+      </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label>Имя</label>
-          <input {...register('firstName', { required: 'Имя обязательно' })} />
-          <span style={{ color: 'red', fontSize: '0.85rem', marginLeft: 4 }}> {errors.firstName?.message} </span>
-        </div>
-        <div>
-          <label>Фамилия</label>
-          <input {...register('lastName', { required: 'Фамилия обязательна' })} />
-          <span style={{ color: 'red', fontSize: '0.85rem', marginLeft: 4 }}> {errors.lastName?.message} </span>
-        </div>
-        <div>
-          <label>Email</label>
-          <input 
-            {...register('email', { 
-              required: 'Email обязателен', 
+        <Stack spacing={2}>
+          <TextField
+            label="Имя"
+            {...register('firstName', { required: 'Имя обязательно' })}
+            error={!!errors.firstName}
+            helperText={errors.firstName?.message}
+            fullWidth
+          />
+          <TextField
+            label="Фамилия"
+            {...register('lastName', { required: 'Фамилия обязательна' })}
+            error={!!errors.lastName}
+            helperText={errors.lastName?.message}
+            fullWidth
+          />
+          <TextField
+            label="Email"
+            {...register('email', {
+              required: 'Email обязателен',
               pattern: {
                 value: /^\S+@\S+$/i,
-                message: 'Неверный формат Email'
-              } 
-            })} 
+                message: 'Неверный формат Email',
+              },
+            })}
+            error={!!errors.email}
+            helperText={errors.email?.message}
+            fullWidth
           />
-          <span style={{ color: 'red', fontSize: '0.85rem', marginLeft: 4 }}> {errors.email?.message} </span>
-        </div>
-        <div>
-          <label>Навыки</label>
-          {fields.map((f, idx) => (
-            <div key={f.id}>
-              <input {...register(`skills.${idx}.value`)} />
-              <button type="button" onClick={() => remove(idx)}>Удалить</button>
-            </div>
-          ))}
-          <button type="button" onClick={() => append({ value: '' })}>
-            Добавить навык
-          </button>
-        </div>
-        <button type="submit">{id ? 'Сохранить' : 'Добавить'}</button>
+
+          <Box>
+            <Typography mb={1}>Навыки</Typography>
+            <Stack spacing={1}>
+              {fields.map((f, idx) => (
+                <Stack key={f.id} direction="row" spacing={1} alignItems="center">
+                  <TextField
+                    {...register(`skills.${idx}.value`)}
+                    fullWidth
+                    size="small"
+                  />
+                  <IconButton color="error" onClick={() => remove(idx)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Stack>
+              ))}
+              <Button variant="outlined" onClick={() => append({ value: '' })}>
+                Добавить навык
+              </Button>
+            </Stack>
+          </Box>
+
+          <Button type="submit" variant="contained" size="large">
+            {id ? 'Сохранить' : 'Добавить'}
+          </Button>
+        </Stack>
       </form>
-    </div>
+    </Box>
   );
 }

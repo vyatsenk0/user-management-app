@@ -22,7 +22,7 @@ export default function UserList() {
     { field: 'id', headerName: 'ID', width: 70 },
     { field: 'firstName', headerName: 'Имя', width: 150, sortable: true },
     { field: 'lastName', headerName: 'Фамилия', width: 150 },
-    { field: 'email', headerName: 'Email', width: 200 },
+    { field: 'email', headerName: 'Email', width: 210 },
     {
       field: 'skills',
       headerName: 'Навыки',
@@ -34,7 +34,7 @@ export default function UserList() {
     {
       field: 'registeredAt',
       headerName: 'Дата регистрации',
-      width: 170,
+      width: 160,
       sortable: true,
       renderCell: (params: GridRenderCellParams<User>) => {
         return params.row.registeredAt
